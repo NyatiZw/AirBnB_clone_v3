@@ -4,13 +4,11 @@ Contains the FileStorage class
 """
 
 import json
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
+from models import base_model, amenity, city, place, review, state, user
+from datetime import datetime
+
+strptime = datetime.strptime
+to_json = base_model.BaseModel.to_json
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -71,12 +69,12 @@ class FileStorage:
 
     def get(self, cls, id):
         """Method to retrieve one object"""
-        if cls is not None:
-          id = obj.__class__.__id
-        return (obj.id)
+        if cls and id:
+            fetch_obj = "{}.{}".format(cls, id)
+            all_obj = self.all(cls)
+            return (all_obj.get(fetch_obj)
+        return (None)
 
     def count(self, cls=None):
         """Method to count the number of objects in storage"""
-        return (len(self.__objects[cls]))
-
-
+        return (len(self.all(cls)))
