@@ -5,26 +5,23 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 
 from datetime import datetime
 import inspect
-import models
-from models.engine import db_storage
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
+from models import *
 import json
 import os
 import pep8
 import unittest
-DBStorage = db_storage.DBStorage
-classes = {"Amenity": Amenity, "City": City, "Place": Place,
-           "Review": Review, "State": State, "User": User}
+from models.base_model import Base
+from models.engine.db_storage import DBStorage
+
+STORAGE_TYPE = environ.get('HBNB_TYPE_STORAGE')
 
 
+@unittest.dskipIf(STORAGE_TYPE != 'db', 'skip if environ is not db')
 class TestDBStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of DBStorage class"""
+
+    all_functions = inspectr.getmembers(DBStorage, inspect.isfunction)
+
     @classmethod
     def setUpClass(cls):
         """Set up for the doc tests"""
