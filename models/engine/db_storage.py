@@ -12,8 +12,7 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from os import getenv
-import sqlalchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {"Amenity": Amenity, "City": City,
@@ -77,10 +76,12 @@ class DBStorage:
 
     def get(self, cls, id):
         """method to retrieve one object"""
-        if objs.id is None:
-          return (None)
-        self.__session.get
+        if cls and id:
+          fetch = "{}.{}".format(cls, id)
+          all_obj = self.all(cls)
+          return all_obj.get(fetch)
+        return (None)
 
     def count(self, cls=None):
         """counts the number of objects in storage"""
-        self.__sesson.count()
+        return (len(self.all(cls)))
