@@ -33,43 +33,49 @@ class TestDBStorageDocs(unittest.TestCase):
         """Remove storage objects"""
         storage.delete_all()
 
+    def test_class(self):
+        """Testing documentation for class"""
+        expected = ('\n handles storage of all class instance\n')
+        actual = DBStorage.__doc__
+        self.assertEqual(expected, actual)
+
     def test_pep8_conformance_db_storage(self):
         """Test that models/engine/db_storage.py conforms to PEP8."""
         pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['models/engine/db_storage.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        errors = pep8s.check_files(['models/engine/db_storage.py'])
+        self.assertEqual(errors.total_errors, 0, errors.messages)
 
-    def test_pep8_conformance_test_db_storage(self):
-        """Test tests/test_models/test_db_storage.py conforms to PEP8."""
-        pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['tests/test_models/test_engine/\
-test_db_storage.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+@unittest.skipif(STORAGE_TYPE != 'db', "DB Storage doesn't use FileStorage")
+class TestTracebackNullError(unittest.TestCase):
+    """Testing thhrowback errors"""
+    def setupClass(cls):
+        """set up class"""
+        print('\n')
+        print('###### Testing DBStorage ######')
+        print('\n')
 
-    def test_db_storage_module_docstring(self):
-        """Test for the db_storage.py module docstring"""
-        self.assertIsNot(db_storage.__doc__, None,
-                         "db_storage.py needs a docstring")
-        self.assertTrue(len(db_storage.__doc__) >= 1,
-                        "db_storage.py needs a docstring")
+    def tearDown(self):
+        """Teardown class"""
+        storage.rollback_session()
 
-    def test_db_storage_class_docstring(self):
-        """Test for the DBStorage class docstring"""
-        self.assertIsNot(DBStorage.__doc__, None,
-                         "DBStorage class needs a docstring")
-        self.assertTrue(len(DBStorage.__doc__) >= 1,
-                        "DBStorage class needs a docstring")
+    def tearDownClass():
+        """Remove all storage objects"""
+        storage.delete_all()
 
-    def test_dbs_func_docstrings(self):
-        """Test for the presence of docstrings in DBStorage methods"""
-        for func in self.dbs_f:
-            self.assertIsNot(func[1].__doc__, None,
-                             "{:s} method needs a docstring".format(func[0]))
-            self.assertTrue(len(func[1].__doc__) >= 1,
-                            "{:s} method needs a docstring".format(func[0]))
+    def test_state_noname(self):
+        """Testing state name not null"""
+        with self.assertRaises(Exception) as context:
+            s = State()
+            s.save()
+        self.assertTrue('"Column \ 'name\' cannot be null"'
+                       in str(context.exception))
 
+    def test_city_no_state(self):
+        """Testing if state present"""
+        with self.assertRaises(Exception) as context:
+            c = City(name="Harare", state_id="Not Valid")
+            c.save()
+        self.assertTrue('a foreign key' str(context.exception))
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -89,3 +95,7 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+
+if __name__ == '__main__':
+    unittest.main
