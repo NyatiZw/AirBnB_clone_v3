@@ -16,16 +16,22 @@ from models.engine.db_storage import DBStorage
 STORAGE_TYPE = environ.get('HBNB_TYPE_STORAGE')
 
 
-@unittest.dskipIf(STORAGE_TYPE != 'db', 'skip if environ is not db')
+@unittest.skipIf(STORAGE_TYPE != 'db', 'skip if environ is not db')
 class TestDBStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of DBStorage class"""
 
-    all_functions = inspectr.getmembers(DBStorage, inspect.isfunction)
+    all_functions = inspect.getmembers(DBStorage, inspect.isfunction)
 
     @classmethod
     def setUpClass(cls):
         """Set up for the doc tests"""
-        cls.dbs_f = inspect.getmembers(DBStorage, inspect.isfunction)
+        print('\n')
+        print('###### Testing Docs ######')
+        print('\n')
+
+    def tearDown():
+        """Remove storage objects"""
+        storage.delete_all()
 
     def test_pep8_conformance_db_storage(self):
         """Test that models/engine/db_storage.py conforms to PEP8."""
