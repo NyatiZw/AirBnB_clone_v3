@@ -10,17 +10,18 @@ import os
 from flask_cors import CORS, cross_origin
 
 
-""" Flask server environment setup"""
-host = os.getenv('HBNB_API_HOST', '0.0.0.0')
-port = int(os.getenv('HBNB_API_PORT', 5000))
-
 """Flask Application Variable"""
 app = Flask(__name__)
+
 app.url_map.strict_slashes = False
+
+""" Flask server environment setup"""
+host = os.getenv('HBNB_API_HOST', '0.0.0.0')
+port = os.getenv('HBNB_API_PORT', 5000)
+
 
 """Cross-Origin Resource Sharing"""
 cors = CORS(app, resources={r'/*': {'origins': host}})
-
 
 """Register blueprint app_views for Flask instance"""
 app.register_blueprint(app_views)
