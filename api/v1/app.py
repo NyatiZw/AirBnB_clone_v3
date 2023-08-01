@@ -14,8 +14,6 @@ app = Flask(__name__)
 
 app.url_map.strict_slashes = False
 
-#Register blueprint app_views for Flask instance
-app.register_blueprint(app_views)
 
 # Declare a method to handle teardown
 def teardown(exception):
@@ -25,7 +23,11 @@ def teardown(exception):
 host = os.getenv('HBNB_API_HOST', '0.0.0.0')
 port = os.getenv('HBNB_API_PORT', 5000)
 
+#Cross-Origin Resource Sharing
 cors = CORS(app, resources={r'/*': {'origins': host}})
+
+#Register blueprint app_views for Flask instance
+app.register_blueprint(app_views)
 
 
 If __name__ == '__main__':
