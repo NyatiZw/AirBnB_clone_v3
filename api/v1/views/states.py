@@ -1,54 +1,59 @@
 #!/usr/bin/python3
 """
-flask route to return json status
+View for State objects that handles all default API
 """
-from api.v1.views import app_views
-from flask import abort, jsonify, make_response, request
-from models import storage, CNC
+from flask import Blueprint, request, jsonify, abort
+from models.state import State
 
 
-@app_views.route('/states', methods=['GET', 'POST'])
-def no_states_id():
-    """
-    Route to handle requests with no id
-    """
-    if request.method == 'GET':
-        all_states = storage.all('State')
-        all_states = list(obj.to_json() for obj in all_states.values())
-        return jsonify(all_states)
+states_bp = Blueprint('states', __name__, url_prefix='/api/v1/states')
 
-    if request.method == 'POST':
-        request_json = request.get_json()
-        if request_json is None:
-            abort(400, 'Not a json')
-        if request_json.get("name") is None:
-            abort(400, 'Missing name')
-        State = CNC.get("State")
-        new_object = State(**request_json)
-        new_object.save()
-        return jsonify(new_object.to_json()), 201
+@states_bp.route('', methods=['GET'])
+def get_all_states():
+    states = State.query.all()
+    return jsonify([state.to_dict() for state in states]), 200
 
 
-@app_views.route('/states/<state_id>', method=['GET', 'DELETE', 'PUT'])
-def states_id(state_id=None):
-    """
-    Route to handle state id requests
-    """
-    state_obj = storage.get('State', state_id)
-    if state_obj is None:
-        abort(404, 'Not found')
+@states_bp.route('/<int:state_id>', methods=['GET'])
+def get_state(state_id):
+    state = State.quety.get(state_id)
+    if not state:
+        abort(404)
+    return jsonify(state.to_dict()), 200
 
-    if request.method == 'GET':
-        return jsonify(state_obj.to_json())
 
-    if request.method == 'DELETE':
-        state_obj.delete()
-        del state_obj
-        return jsonify({})
+@states_bp.route('/<int:state_id>', methods=['DELETE'])
+def delete_state(state_id):
+    state = State.query.get(state_id)
+    if not state:
+        abort(404)
+    state.delete()
+    return jsonify({}), 200
 
-    if request.method == 'PUT':
-        request_json = request.get_json()
-        if request_json is None:
-            abort(400, 'Not a JSON')
-        state_obj.bm_update(request_json)
-        return jsonify(state_obj.to_json())
+
+@states_bp.route('', methods=['POST'])
+def create_state():
+    data = request.get_json()
+    if not data:
+        abort(400, 'Not a JSON')
+    if 'name' not in data:
+        abort(400, 'Missing name')
+    state = State(**data)
+    state.save()
+    return jsonify(state.to_dict()), 201
+
+
+@states_bp.route('/<int:state_id>', methods=['PUT'])
+def update_state(state_id):
+    state = State.query.get(state_id)
+    if not state:
+        abort(404)
+    data = request.get_json()
+    if not data:
+        abort(400, 'Not a JSON')
+    ignored_keys = ['id', 'created_at', 'updated_at']
+    for key, value in data.items():
+        if key not in ignored_keys:
+            setattr(state, key, value)
+    state.save()
+    return jsonify(state.to_dict()), 200
