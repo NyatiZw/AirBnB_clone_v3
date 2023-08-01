@@ -22,15 +22,14 @@ app.url_map.strict_slashes = False
 cors = CORS(app, resources={r'/*': {'origins': host}})
 
 
+"""Register blueprint app_views for Flask instance"""
+app.register_blueprint(app_views)
+
 """ Declare a method to handle teardown"""
 
 
 def teardown(exception):
     storage.close()
-
-
-"""Register blueprint app_views for Flask instance"""
-app.register_blueprint(app_views)
 
 
 """ MAIN FLASK APP """
