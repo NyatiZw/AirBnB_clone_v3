@@ -26,7 +26,11 @@ cors = CORS(app, resources={r'/*': {'origins': host}})
 app.register_blueprint(app_views)
 
 # Declare a method to handle teardown
+@app.teardown_appcontext
 def teardown_database(exception):
+    """
+    removes current SQLAlchemy
+    """
     storage.close()
 
 
