@@ -26,10 +26,12 @@ cors = CORS(app, resources={r'/*': {'origins': host}})
 app.register_blueprint(app_views)
 
 # Declare a method to handle teardown
-def teardown(exception):
+def teardown_database(exception):
     storage.close()
 
 
-""" MAIN FLASK APP """
 if __name__ == '__main__':
+    """
+    MAIN Flask App
+    """
     app.run(host=host, port=port)
