@@ -2,8 +2,7 @@
 """
 API to return status
 """
-
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response, render_template, url_for
 from models import storage
 from api.v1.views import app_views
 import os
@@ -24,6 +23,7 @@ cors = CORS(app, resources={r'/*': {'origins': host}})
 
 #Register blueprint app_views for Flask instance
 app.register_blueprint(app_views)
+
 
 # Declare a method to handle teardown
 @app.teardown_appcontext
