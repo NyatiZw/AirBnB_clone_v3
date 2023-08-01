@@ -30,7 +30,7 @@ cors = CORS(app, resources={r'/*': {'origins': host}})
 app.register_blueprint(app_views)
 
 
-If __name__ == '__main__':
+if __name__ == '__main__':
     """
     MAIN FLASK APP
     """
