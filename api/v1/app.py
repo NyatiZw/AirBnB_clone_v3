@@ -7,6 +7,7 @@ from models import storage
 from api.v1.views import app_views
 import os
 from flask_cors import CORS, cross_origin
+from werkzeug.exceptions import HTTPException
 
 #Flask Application Variable
 app = Flask(__name__)
@@ -27,7 +28,7 @@ app.register_blueprint(app_views)
 
 # Declare a method to handle teardown
 @app.teardown_appcontext
-def teardown_database(exception):
+def teardown_database(Exception):
     """
     removes current SQLAlchemy
     """
@@ -35,6 +36,28 @@ def teardown_database(exception):
 
 
 @app.errorhandler(Exception)
+def global_error_handler(err):
+    """
+    Global Route for all errors
+    """
+    if isinstance(err, HTTPException):
+        if type(err).__name__ == 'NotFound':
+            err.description = "Not Found"
+        message = {'error': err.description}
+        error_code = err.code
+    else:
+        message = {'error': err}
+        error_code = 500
+    return make_response(jsonify(message), error_code)
+
+
+def setup_global_errors():
+    """
+    This updates HTTPException Class
+    """
+    for cls in HTTPException.__subclasses__():
+        app.register_error_handler(cls, global_error_handler)
+
 
 if __name__ == '__main__':
     """
