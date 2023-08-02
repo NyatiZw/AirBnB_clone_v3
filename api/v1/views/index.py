@@ -24,7 +24,7 @@ def stats():
     """
     if request.method == 'GET':
         response = {}
-        obj_counts = {
+        obj_count = {
             'amenities': storage.count('Amenity'),
             'cities': storage.count('City'),
             'places': storage.count('Place'),
@@ -32,6 +32,6 @@ def stats():
             'reviews': storage.count('Reviews'),
             'users': storage.count('User')
         }
-        for k, value in obj_counts.items():
+        for k, value in obj_count.items():
             response[k] = value
         return jsonify(response)
