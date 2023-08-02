@@ -10,7 +10,7 @@ from models.user import User
 places_bp = Blueprint('places', __name__, url_prefix='/api/v1/places')
 
 
-@places_bp.route('/place_id', methods=['GET'])
+@places_bp.route('/<int:place_id>', methods=['GET'])
 def get_place(place_id):
     place = Place.query.get(place_id)
     if not place:
@@ -18,7 +18,7 @@ def get_place(place_id):
     return jsonify(place.to_dict()), 200
 
 
-@places_bp.route('/<place_id>', methods=['DELETE'])
+@places_bp.route('/<int:place_id>', methods=['DELETE'])
 def delete_place(place_id):
     place = Place.query.get(place_id)
     if not place:
@@ -27,7 +27,7 @@ def delete_place(place_id):
     return jsonify({}), 200
 
 
-@places_bp.route('/<city_id>/places', methods=['GET'])
+@places_bp.route('/<int:city_id>/places', methods=['GET'])
 def get_places_by_city(city_id):
     city = City.query.get(city_id)
     if not city:
@@ -36,7 +36,7 @@ def get_places_by_city(city_id):
     return jsonify([place.to_dict() for place in places]), 200
 
 
-@places_bp.route('/city_id/places', methods=['POST'])
+@places_bp.route('/<int:city_id>/places', methods=['POST'])
 def create_place(city_id):
     city = City.query.get(city_id)
     if not city:
@@ -60,7 +60,7 @@ def create_place(city_id):
     return jsonify(place.to_dict()), 201
 
 
-@places_bp.route('/place_id', methods=['PUT'])
+@places_bp.route('/<int:place_id>', methods=['PUT'])
 def update_user(place_id):
     place = Place.query.get(place_id)
     if not place:

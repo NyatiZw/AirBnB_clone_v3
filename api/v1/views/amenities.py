@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Amenity Api handles
+    Amenity Api handles
 """
 from flask import Blueprint, request, jsonify, abort
 from models.amenity import Amenity
