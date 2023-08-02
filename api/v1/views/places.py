@@ -3,7 +3,7 @@
 places Api handles
 """
 from flask import Blueprint, request, jsonify, abort
-from models.user import User
+from models.place import Place
 from models.city import City
 from models.user import User
 
