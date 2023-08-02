@@ -32,6 +32,6 @@ def stats():
             'reviews': storage.count('Reviews'),
             'users': storage.count('User')
         }
-        for k, value in obj_count.items():
-            response[value] = storage.count(k)
+        for k, value in obj_counts.items():
+            response[k] = value
         return jsonify(response)
