@@ -10,7 +10,7 @@ from models.user import User
 places_bp = Blueprint('places', __name__, url_prefix='/api/v1/places')
 
 
-@places_bp.route('/place_id', methods=['GET'])
+@places_bp.route('/<int:place_id>', methods=['GET'])
 def get_place(place_id):
     place = Place.query.get(place_id)
     if not place:
