@@ -2,7 +2,6 @@
 """
 Amenity Api handles
 """
-
 from flask import Blueprint, request, jsonify, abort
 from models.amenity import Amenity
 
@@ -15,12 +14,14 @@ def get_all_amenities():
     amenities = Amenity.query.all()
     return jsonify([amenity.to_dict() for amenity in amenities]), 200
 
-@amenities_bp.rout('/<int:amenity_id>', methods=['GET'])
+
+@amenities_bp.route('/<int:amenity_id>', methods=['GET'])
 def get_amenity(amenity_id):
     amenity = Amenity.query.get(amenity_id)
     if not amenity:
         abort(404)
     return jsonify(amenity.to_dict()), 200
+
 
 @amenities_bp.route('/<int:amenity_id>', methods=['DELETE'])
 def delete_amenity(amenity_id):
