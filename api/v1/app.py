@@ -9,28 +9,29 @@ import os
 from flask_cors import CORS, cross_origin
 from werkzeug.exceptions import HTTPException
 
-"""Flask Application Variable"""
+# Flask Application Variable: app
 app = Flask(__name__)
 
+# global strict slashes
 app.url_map.strict_slashes = False
 
-"""Flask server environment setup"""
+# Flask server environment setup
 host = os.getenv('HBNB_API_HOST', '0.0.0.0')
 port = os.getenv('HBNB_API_PORT', 5000)
 
-
-"""Cross-Origin Resource Sharing"""
+# Cross-Origin Resource Sharing
 cors = CORS(app, resources={r'/*': {'origins': host}})
 
-"""Register blueprint app_views for Flask instance"""
+# Register blueprint app_views for Flask instance
 app.register_blueprint(app_views)
 
 
-"""Declare a method to handle teardown"""
+# Declare a method to handle teardown"""
 @app.teardown_appcontext
-def teardown_database(Exception):
+def teardown_database(exception):
     """
     removes current SQLAlchemy
+    after each request
     """
     storage.close()
 
