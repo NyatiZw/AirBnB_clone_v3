@@ -2,7 +2,6 @@
 """
 Flask app route to handle reviews
 """
-
 from flask import Blueprint, request, jsonify, abort
 from models.review import Review
 from models.place import Place
@@ -31,7 +30,7 @@ def delete_review(review_id):
 @reviews_bp.route('/<int:place_id>/reviews', methods=['GET'])
 def get_reviews_by_place(place_id):
     place = Place.query.get(place_id)
-    if not placwe:
+    if not place:
         abort(404)
     reviews = Review.query.filter_by(place_id=place_id).all()
     return jsonify([review.to_dict() for review in reviews]), 200
@@ -57,7 +56,7 @@ def create_review(place_id):
     return jsonify(review.to_dict()), 201
 
 
-@review_bp.route('/int:review_id>', methods=['PUT'])
+@review_bp.route('/<int:review_id>', methods=['PUT'])
 def update_review(review_id):
     review = Review.query.get(review_id)
     if not review:
