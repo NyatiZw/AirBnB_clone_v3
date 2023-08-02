@@ -28,7 +28,7 @@ app.register_blueprint(app_views)
 
 # Declare a method to handle teardown"""
 @app.teardown_appcontext
-def teardown_database(exception):
+def teardown_database(Exception):
     """
     removes current SQLAlchemy
     after each request
