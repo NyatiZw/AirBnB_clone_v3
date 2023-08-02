@@ -8,6 +8,7 @@ from models.state import State
 
 states_bp = Blueprint('states', __name__, url_prefix='/api/v1/states')
 
+
 @states_bp.route('', methods=['GET'])
 def get_all_states():
     states = State.query.all()

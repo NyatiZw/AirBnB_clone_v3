@@ -45,6 +45,7 @@ def create_user():
     user.save()
     return jsonify(user.to_dict()), 201
 
+
 @users_bp.route('/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     user = User.query.get(user_id)

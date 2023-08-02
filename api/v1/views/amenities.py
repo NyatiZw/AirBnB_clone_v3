@@ -43,6 +43,7 @@ def create_amenity():
     amenity.save()
     return jsonify(amenity.to_dict()), 201
 
+
 @amenities_bp.route('/<int:amenity_id>', methods=['PUT'])
 def update_amenity(amenity_id):
     amenity = Amenity.query.get(amenity_id)

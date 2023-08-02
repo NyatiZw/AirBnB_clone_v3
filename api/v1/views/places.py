@@ -51,9 +51,14 @@ def create_place(city_id):
         abort(404)
     if 'name' not in data:
         abort(400, 'Missing name')
-    place = Place(name=data['name'], user_id=data['user_id'], city_id='city_id')
+    place = Place(
+                     name=data['name'],
+                     user_id=data['user_id'],
+                     city_id='city_id'
+        )
     place.save()
     return jsonify(place.to_dict()), 201
+
 
 @places_bp.route('/place_id', methods=['PUT'])
 def update_user(place_id):
